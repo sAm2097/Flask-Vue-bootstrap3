@@ -103,6 +103,9 @@
 
         <b-button variant="primary" @click="getFolders()">Select folder </b-button>
         
+        <div id="folders-container">
+
+        </div>
         <!-- X and Y are the parameters to train from selected folder of images -->
 
         <b-form-group
@@ -263,11 +266,39 @@ export default {
     
   },
 
+fetchFolders = async() => {
+const response = await fetch('http://localhost:5000/tasks/uploaded_files?path=./uploaded_files');
+const responseInJson = await response.json();
+return responseInJson },
+
+// create a div with id named folders-container to show folders list
+
+window:onload = () => {
+ const response = fetchFolders()  
+ const foldersContainer = document.getElementById('folders-container');
+ const heading = document.createElement('h1');
+ heading.innerText = 'hello';
+ foldersContainer?.appendChild(heading)
+ const unOrderedList = document.createElement('ul');
+ response.children.forEach(eachFolder => {
+ const list = document.createElement('li');
+ list.innerText = eachFolder;
+ unOrderedList.appendChild(list);
+ 
+
+ });
+ foldersContainer?.appendChild(unOrderedList)
+
+},
+  
+
   methods: {
     getFolders(){
        const path ='http://localhost:5000/tasks/uploaded_files?path=./uploaded_files';
+ 
        axios
         .get(path)
+        
 
         
         
