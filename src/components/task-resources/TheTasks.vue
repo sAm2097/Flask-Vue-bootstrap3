@@ -313,7 +313,6 @@
   </div>
 </template>
 
-
 <script>
 import axios from 'axios';
 import Alert from './Alert.vue';
@@ -481,7 +480,6 @@ export default {
       const payload = {
         title: this.editForm.title,
         description: this.editForm.description,
-        folder: this.selectedFolder,
         X: this.editForm.X,
         Y: this.editForm.Y,
         read,
@@ -538,3 +536,5 @@ main {
   max-width: 80rem;
 }
 </style>
+
+
