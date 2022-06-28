@@ -195,6 +195,41 @@
       title="Update"
       hide-footer
     >
+    <section v-if="showFolders">
+        <div>
+          <b-button variant="primary" @click="showFolders = !showFolders">Back</b-button>
+        </div>
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Folder name</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(folder, index) in folders" :key="index">
+              <td>{{ folder }}</td>
+              <td>
+                <div class="btn-group" role="group">
+                  <button
+                    type="button"
+                    class="btn btn-warning btn-sm"
+                    @click="openFolder(folder)"
+                    >Open</button
+                  >
+                  <button
+                    type="button"
+                    class="btn btn-danger btn-sm"
+                    @click="selectFolder(folder)"
+                    >Select</button
+                  >
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+      <section v-else>
       <b-form @submit="onSubmitUpdate" @reset="onResetUpdate" class="w-100">
         <b-form-group
           id="form-title-edit-group"
@@ -224,6 +259,12 @@
             placeholder="Enter description"
           >
           </b-form-input>
+
+           <b-button variant="primary" @click="getFolders()">Select folder </b-button>
+          <div class="my-2">
+            Selected folder: {{ selectedFolder }}
+          </div>
+
         </b-form-group>
 
         <b-form-group
@@ -267,6 +308,7 @@
           <b-button type="reset" variant="danger">Cancel</b-button>
         </b-button-group>
       </b-form>
+      </section>
     </b-modal>
   </div>
 </template>
@@ -439,6 +481,7 @@ export default {
       const payload = {
         title: this.editForm.title,
         description: this.editForm.description,
+        folder: this.selectedFolder,
         X: this.editForm.X,
         Y: this.editForm.Y,
         read,
@@ -495,4 +538,3 @@ main {
   max-width: 80rem;
 }
 </style>
-
