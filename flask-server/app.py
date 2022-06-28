@@ -4,27 +4,20 @@ from flask_cors import CORS
 from flask import send_from_directory
 import uuid
 
+from sqlalchemy import false
+
 
 Tasks= [
         {
           'id': uuid.uuid4().hex,
           'title': 'Task1',
           'description': 'About trained task',
+          'folder':'folder_1',
           'X':'1',
           'Y':'0.9',
-          'read':True
-          
+          'read':True 
         },
-        {
-          'id': uuid.uuid4().hex,
-          'title': 'Task2',
-          'description': 'Task 2 data',
-          'X':'1',
-          'Y':'0.9',
-         'read':False
-          
-        },
-      ]
+     ]
 
 # instantiate the app
 app = Flask(__name__)
@@ -45,8 +38,10 @@ def all_tasks():
           'id':uuid.uuid4().hex,
             'title': post_data.get('title'),
             'description': post_data.get('description'),
+            'folder':post_data.get('folder'),
             'X':post_data.get('X'),
             'Y':post_data.get('Y'),
+            
            'read': post_data.get('read'),
         })
         response_object['message'] = 'Task added!'
@@ -66,6 +61,7 @@ def single_task(task_id):
             'id':uuid.uuid4().hex,
             'title': post_data.get('title'),
             'description': post_data.get('description'),
+            
             'X':post_data.get('X'),
             'Y':post_data.get('Y'),
            'read': post_data.get('read'),
@@ -85,8 +81,12 @@ def remove_task(task_id):
 
 @app.route('/tasks/uploaded_files',methods=['GET'])
 def SelectFolder():
+    
     folders=os.listdir(request.args['path'])
     return {"data":folders}
+
+   
+
 
      
 if __name__ == '__main__':
