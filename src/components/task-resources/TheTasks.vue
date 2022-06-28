@@ -21,7 +21,6 @@
             <tr>
               <th scope="col">Title</th>
               <th scope="col">Description</th>
-              <th scope="col">Folder</th>
               <th scope="col">X-Parameter</th>
               <th scope="col">Y-Parameter</th>
               <th scope="col">Task?</th>
@@ -32,9 +31,6 @@
             <tr v-for="(task, index) in tasks" :key="index">
               <td>{{ task.title }}</td>
               <td>{{ task.description }}</td>
-              <td>
-                {{task.folder}}
-               </td>
               <td>{{ task.X }}</td>
               <td>{{ task.Y }}</td>
               <td>
@@ -64,7 +60,7 @@
         </main>
       </div>
     </div>
-
+    
     <!-- Here the new task will be added -->
     <b-modal
       ref="addTaskModal"
@@ -72,87 +68,34 @@
       title="Add a new Task"
       hide-footer
     >
-      <section v-if="showFolders">
-        <div>
-          <b-button variant="primary" @click="showFolders = !showFolders">Back</b-button>
-        </div>
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th scope="col">Folder name</th>
-              <th scope="col">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(folder, index) in folders" :key="index">
-              <td>{{ folder }}</td>
-              <td>
-                <div class="btn-group" role="group">
-                  <button
-                    type="button"
-                    class="btn btn-warning btn-sm"
-                    @click="openFolder(folder)"
-                    >Open</button
-                  >
-                  <button
-                    type="button"
-                    class="btn btn-danger btn-sm"
-                    @click="selectFolder(folder)"
-                    >Select</button
-                  >
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
-      <section v-else>
-        <b-form @submit="onSubmit" @reset="onReset" class="w-100">
-          <b-form-group
-            id="form-title-group"
-            label="Title:"
-            label-for="form-title-input"
+      <b-form @submit="onSubmit" @reset="onReset" class="w-100">
+        <b-form-group
+          id="form-title-group"
+          label="Title:"
+          label-for="form-title-input"
+        >
+          <b-form-input
+            id="form-title-input"
+            type="text"
+            v-model="addTaskForm.title"
+            required
+            placeholder="Enter title"
           >
-            <b-form-input
-              id="form-title-input"
-              type="text"
-              v-model="addTaskForm.title"
-              required
-              placeholder="Enter title"
-            >
-            </b-form-input>
-          </b-form-group>
+          </b-form-input>
+        </b-form-group>
 
-          <b-form-group
-            id="form-decription-group"
-            label="Description:"
-            label-for="form-description-input"
+        <b-form-group
+          id="form-decription-group"
+          label="Description:"
+          label-for="form-description-input"
+        >
+          <b-form-input
+            id="form-description-input"
+            type="text"
+            v-model="addTaskForm.description"
+            required
+            placeholder="Enter Description"
           >
-<<<<<<< HEAD
-            <b-form-input
-              id="form-description-input"
-              type="text"
-              v-model="addTaskForm.description"
-              required
-              placeholder="Enter Description"
-            >
-            </b-form-input>
-          </b-form-group>
-
-            <!-- button to select folder of images to train -->
-
-          <b-button variant="primary" @click="getFolders()">Select folder </b-button>
-          <div class="my-2">
-            Selected folder: {{ selectedFolder }}
-          </div>
-
-          <!-- X and Y are the parameters to train from selected folder of images -->
-
-          <b-form-group
-            id="form-Xpara-group"
-            label="X-Parameter:"
-            label-for="form-Xpara-input"
-=======
           </b-form-input>
         </b-form-group>
 
@@ -177,45 +120,35 @@
             required
             placeholder="Enter X-Parameter"
             
->>>>>>> 516b8592e5a5435cd9f8b8c70706110fe0eae927
           >
-            <b-form-input
-              id="form-Xpara-input"
-              type="text"
-              v-model.number="addTaskForm.X" number
-              required
-              placeholder="Enter X-Parameter"
+          </b-form-input>
+        </b-form-group>
 
-            >
-            </b-form-input>
-          </b-form-group>
-
-          <b-form-group
-            id="form-Ypara-group"
-            label="Y-Parameter:"
-            label-for="form-Ypara-input"
+        <b-form-group
+          id="form-Ypara-group"
+          label="Y-Parameter:"
+          label-for="form-Ypara-input"
+        >
+          <b-form-input
+            id="form-Ypara-input"
+            type="text"
+            v-model.number="addTaskForm.Y" number
+            required
+            placeholder="Enter Y-Parameter"
+            
           >
-            <b-form-input
-              id="form-Ypara-input"
-              type="text"
-              v-model.number="addTaskForm.Y" number
-              required
-              placeholder="Enter Y-Parameter"
+          </b-form-input>
+        </b-form-group>
 
-            >
-            </b-form-input>
-          </b-form-group>
+        <b-form-group id="form-read-group">
+          <b-form-checkbox-group v-model="addTaskForm.read" id="form-checks">
+            <b-form-checkbox value="true">Task?</b-form-checkbox>
+          </b-form-checkbox-group>
+        </b-form-group>
 
-          <b-form-group id="form-read-group">
-            <b-form-checkbox-group v-model="addTaskForm.read" id="form-checks">
-              <b-form-checkbox value="true">Task?</b-form-checkbox>
-            </b-form-checkbox-group>
-          </b-form-group>
-
-          <b-button type="submit" variant="primary">Train</b-button>
-          <b-button type="reset" variant="danger">Reset</b-button>
-        </b-form>
-      </section>
+        <b-button type="submit" variant="primary">Train</b-button>
+        <b-button type="reset" variant="danger">Reset</b-button>
+      </b-form>
     </b-modal>
     <!-- Editing and updating the task -->
     <b-modal
@@ -224,41 +157,6 @@
       title="Update"
       hide-footer
     >
-    <section v-if="showFolders">
-        <div>
-          <b-button variant="primary" @click="showFolders = !showFolders">Back</b-button>
-        </div>
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th scope="col">Folder name</th>
-              <th scope="col">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(folder, index) in folders" :key="index">
-              <td>{{ folder }}</td>
-              <td>
-                <div class="btn-group" role="group">
-                  <button
-                    type="button"
-                    class="btn btn-warning btn-sm"
-                    @click="openFolder(folder)"
-                    >Open</button
-                  >
-                  <button
-                    type="button"
-                    class="btn btn-danger btn-sm"
-                    @click="selectFolder(folder)"
-                    >Select</button
-                  >
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
-      <section v-else>
       <b-form @submit="onSubmitUpdate" @reset="onResetUpdate" class="w-100">
         <b-form-group
           id="form-title-edit-group"
@@ -289,11 +187,6 @@
           >
           </b-form-input>
         </b-form-group>
-        <b-button variant="primary" @click="getFolders()">Select folder </b-button>
-          <div class="my-2">
-            Selected folder: {{ selectedFolder }}
-          </div>
-        
 
         <b-form-group
           id="form-Xpara-edit-group"
@@ -327,7 +220,7 @@
 
         <b-form-group id="form-read-edit-group">
           <b-form-checkbox-group v-model="editForm.read" id="form-checks">
-            <b-form-checkbox value="true">Status</b-form-checkbox>
+            <b-form-checkbox value="true">Task?</b-form-checkbox>
           </b-form-checkbox-group>
         </b-form-group>
 
@@ -336,9 +229,7 @@
           <b-button type="reset" variant="danger">Cancel</b-button>
         </b-button-group>
       </b-form>
-      </section>
     </b-modal>
-    
   </div>
 </template>
 
@@ -355,7 +246,6 @@ export default {
         id: '',
         title: '',
         description: '',
-       
         X: 0,
         Y: 0,
         read: [],
@@ -363,7 +253,6 @@ export default {
       addTaskForm: {
         title: '',
         description: '',
-        
         X: 0,
         Y:0,
         read: [],
@@ -380,34 +269,7 @@ export default {
     alert: Alert,
   },
 
-fetchFolders = async() => {
-const response = await fetch('http://localhost:5000/tasks/uploaded_files?path=./uploaded_files');
-const responseInJson = await response.json();
-return responseInJson },
-
-// create a div with id named folders-container to show folders list
-
-window:onload = () => {
- const response = fetchFolders()  
- const foldersContainer = document.getElementById('folders-container');
- const heading = document.createElement('h1');
- heading.innerText = 'hello';
- foldersContainer?.appendChild(heading)
- const unOrderedList = document.createElement('ul');
- response.children.forEach(eachFolder => {
- const list = document.createElement('li');
- list.innerText = eachFolder;
- unOrderedList.appendChild(list);
- 
-
- });
- foldersContainer?.appendChild(unOrderedList)
-
-},
-  
-
   methods: {
-<<<<<<< HEAD
     async getFolders(){
        if (!this.showFolders) {
          this.folderStack = [];
@@ -417,18 +279,6 @@ window:onload = () => {
 
        const response = await axios
         .get(path)
-=======
-    getFolders(){
-       const path ='http://localhost:5000/tasks/uploaded_files?path=./uploaded_files';
- 
-       axios
-        .get(path)
-        
-
-        
-        
-        
->>>>>>> 516b8592e5a5435cd9f8b8c70706110fe0eae927
         .catch((error) => {
           // eslint-disable-next-line
           console.error(error);
@@ -454,7 +304,6 @@ window:onload = () => {
         .get(path)
         .then((res) => {
           this.tasks = res.data.tasks;
-           
         })
         .catch((error) => {
           // eslint-disable-next-line
@@ -478,7 +327,6 @@ window:onload = () => {
           this.getTasks();
           this.message = 'Task added!';
           this.showMessage = true;
-          
         })
         .catch((error) => {
           // eslint-disable-next-line
@@ -520,7 +368,7 @@ window:onload = () => {
 
       this.editForm.id = '';
       this.editForm.title = '';
-      this.editForm.description = ''; 
+      this.editForm.description = '';
       this.editForm.X = '';
       this.editForm.Y = '';
       this.editForm.read = [];
@@ -531,12 +379,11 @@ window:onload = () => {
       evt.preventDefault();
      // this.$refs.addTaskModal.hide();
       let read = false;
-      
       if (this.addTaskForm.read[0]) read = true;
       const payload = {
         title: this.addTaskForm.title,
         description: this.addTaskForm.description,
-        folder:this.selectedFolder,
+        folder: this.selectedFolder,
         X: this.addTaskForm.X,
         Y: this.addTaskForm.Y,
         read, // property shorthand
@@ -550,12 +397,10 @@ window:onload = () => {
       evt.preventDefault();
       //this.$refs.editTaskModal.hide();
       let read = false;
-      
       if (this.editForm.read[0]) read = true;
       const payload = {
         title: this.editForm.title,
         description: this.editForm.description,
-        folder:this.selectedFolder,
         X: this.editForm.X,
         Y: this.editForm.Y,
         read,
