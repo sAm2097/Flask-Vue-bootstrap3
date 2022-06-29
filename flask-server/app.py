@@ -61,7 +61,7 @@ def single_task(task_id):
             'id':uuid.uuid4().hex,
             'title': post_data.get('title'),
             'description': post_data.get('description'),
-            
+            'folder':post_data.get('folder'),
             'X':post_data.get('X'),
             'Y':post_data.get('Y'),
            'read': post_data.get('read'),
