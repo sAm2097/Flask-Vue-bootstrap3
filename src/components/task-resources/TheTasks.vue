@@ -16,14 +16,15 @@
 
         <br /><br />
         <main>
+          {{Jsonfile}}
         <table class="table table-hover">
           <thead>
             <tr>
               <th scope="col">Title</th>
               <th scope="col">Description</th>
               <th scope="col">Folder</th>
-              <th scope="col">X-Parameter</th>
-              <th scope="col">Y-Parameter</th>
+              <!-- <th scope="col">X-Parameter</th>
+              <th scope="col">Y-Parameter</th> -->
               <th scope="col">Task?</th>
               <th></th>
             </tr>
@@ -33,8 +34,9 @@
               <td>{{ task.title }}</td>
               <td>{{ task.description }}</td>
               <td>{{ task.folder }}</td>
-              <td>{{ task.X }}</td>
-              <td>{{ task.Y }}</td>
+
+              <!-- <td>{{ task.X }}</td>
+              <td>{{ task.Y }}</td> -->
               <td>
                 <span v-if="task.read">Completed</span>
                 <span v-else>In process</span>
@@ -145,7 +147,25 @@
 
           <!-- X and Y are the parameters to train from selected folder of images -->
 
-          <b-form-group
+          <b-form-group v-for="(par,index) in Jsonfile" 
+
+          :key="index"
+          id="form-para-group"
+          label="par"
+          >
+          <b-form-input
+              id="form-para-input"
+              type="text"
+              v-model.number="Jsonfile[index]" 
+              required
+              placeholder="Enter X-Parameter"
+
+            >
+            </b-form-input>
+          </b-form-group>
+
+            
+   <b-form-group
             id="form-Xpara-group"
             label="X-Parameter:"
             label-for="form-Xpara-input"
@@ -175,7 +195,7 @@
 
             >
             </b-form-input>
-          </b-form-group>
+          </b-form-group> 
 
           <b-form-group id="form-read-group">
             <b-form-checkbox-group v-model="addTaskForm.read" id="form-checks">
@@ -321,6 +341,7 @@ export default {
   data() {
     return {
       tasks: [],
+      Jsonfile:[],
       editForm: {
         id: '',
         title: '',
@@ -397,6 +418,23 @@ export default {
     },
 
     //adding the new task
+    jsonParams(){
+      const path=`http://localhost:5000/tasks/parameters`;
+
+      const res= axios
+      .get(path)
+      // .then((res)=>
+      // {
+      //   this.Jsonfile = res.data.Jsonfile;
+      //   console.log(res);
+      //   })
+
+      .catch((error) => {
+          // eslint-disable-next-line
+          console.error(error);
+        });
+        console.log(res)
+    },
 
     addTask(payload) {
       const path = 'http://localhost:5000/tasks';
@@ -536,5 +574,4 @@ main {
   max-width: 80rem;
 }
 </style>
-
 
