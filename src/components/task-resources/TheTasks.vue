@@ -16,7 +16,7 @@
 
         <br /><br />
         <main>
-          
+
         <table class="table table-hover">
           <thead>
             <tr>
@@ -139,7 +139,6 @@
           </b-form-group>
 
             <!-- button to select folder of images to train -->
-
           <b-button variant="primary" @click="getFolders()">Select folder </b-button>
           <div class="my-2">
             Selected folder: {{ selectedFolder }}
@@ -147,10 +146,10 @@
 
           <!-- For loop to run key values from json to train from selected folder of images -->
 
-          <b-form-group v-for="(value,key) in Jsonfile" 
+          <b-form-group v-for="(value,key) in Jsonfile"
 
           :key="value"
-          
+
           :label="key"
           >
           <div v-if="typeof value === 'object'">
@@ -162,28 +161,28 @@
                     <b-card>
                       <b-form-group v-for="(value1,key1) in value"
                       :key="value1"
-                     
-                      
+
+
                       :label="key1"
                       >
                         <b-form-input
-                         
+
                           type="text"
-                          v-model="Jsonfile[key][key1]" 
+                          v-model="formData[key][key1]"
                           required
                           placeholder="Enter value"
 
                         >
                         </b-form-input>
-                      </b-form-group>   
+                      </b-form-group>
                     </b-card>
                   </b-collapse>
-                        
+
                    </div>
           <b-form-input v-else
-              
+
               type="text"
-              v-model="Jsonfile[key]" 
+              v-model="formData[key]"
               required
               placeholder="Enter value"
 
@@ -192,7 +191,7 @@
 
           </b-form-group>
 
-            
+
    <!-- <b-form-group
             id="form-Xpara-group"
             label="X-Parameter:"
@@ -369,7 +368,8 @@ export default {
   data() {
     return {
       tasks: [],
-      Jsonfile:[],
+      Jsonfile:{},
+      formData: {},
       editForm: {
         id: '',
         title: '',
@@ -453,6 +453,7 @@ export default {
       .then((res)=>
       {
         this.Jsonfile = res.data;
+        this.formData = {...this.Jsonfile}
         console.log(res);
         })
 
@@ -460,7 +461,7 @@ export default {
           // eslint-disable-next-line
           console.error(error);
         });
-       
+
     },
 
     addTask(payload) {
