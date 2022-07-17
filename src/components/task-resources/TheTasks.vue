@@ -16,7 +16,7 @@
 
         <br /><br />
         <main>
-          {{Jsonfile}}
+          
         <table class="table table-hover">
           <thead>
             <tr>
@@ -145,27 +145,55 @@
             Selected folder: {{ selectedFolder }}
           </div>
 
-          <!-- X and Y are the parameters to train from selected folder of images -->
+          <!-- For loop to run key values from json to train from selected folder of images -->
 
-          <b-form-group v-for="(par,index) in Jsonfile" 
+          <b-form-group v-for="(value,key) in Jsonfile" 
 
-          :key="index"
-          id="form-para-group"
-          label="par"
+          :key="value"
+          
+          :label="key"
           >
-          <b-form-input
-              id="form-para-input"
+          <div v-if="typeof value === 'object'">
+             <b-button v-b-toggle="'collapse'+key" class="m-1">{{key}}</b-button>
+
+                <!-- Element to collapse -->
+                <!-- key+key1,key+key1+'input' will generating a string -->
+                  <b-collapse :id="'collapse'+key">
+                    <b-card>
+                      <b-form-group v-for="(value1,key1) in value"
+                      :key="value1"
+                     
+                      
+                      :label="key1"
+                      >
+                        <b-form-input
+                         
+                          type="text"
+                          v-model="Jsonfile[key][key1]" 
+                          required
+                          placeholder="Enter value"
+
+                        >
+                        </b-form-input>
+                      </b-form-group>   
+                    </b-card>
+                  </b-collapse>
+                        
+                   </div>
+          <b-form-input v-else
+              
               type="text"
-              v-model.number="Jsonfile[index]" 
+              v-model="Jsonfile[key]" 
               required
-              placeholder="Enter X-Parameter"
+              placeholder="Enter value"
 
             >
             </b-form-input>
+
           </b-form-group>
 
             
-   <b-form-group
+   <!-- <b-form-group
             id="form-Xpara-group"
             label="X-Parameter:"
             label-for="form-Xpara-input"
@@ -195,7 +223,7 @@
 
             >
             </b-form-input>
-          </b-form-group> 
+          </b-form-group>  -->
 
           <b-form-group id="form-read-group">
             <b-form-checkbox-group v-model="addTaskForm.read" id="form-checks">
@@ -287,7 +315,7 @@
 
         </b-form-group>
 
-        <b-form-group
+        <!-- <b-form-group
           id="form-Xpara-edit-group"
           label="X-Parameter:"
           label-for="form-Xpara-edit-input"
@@ -315,7 +343,7 @@
             placeholder="Enter Ypara"
           >
           </b-form-input>
-        </b-form-group>
+        </b-form-group> -->
 
         <b-form-group id="form-read-edit-group">
           <b-form-checkbox-group v-model="editForm.read" id="form-checks">
@@ -420,20 +448,19 @@ export default {
     //adding the new task
     jsonParams(){
       const path=`http://localhost:5000/tasks/parameters`;
-
-      const res= axios
+      axios
       .get(path)
-      // .then((res)=>
-      // {
-      //   this.Jsonfile = res.data.Jsonfile;
-      //   console.log(res);
-      //   })
+      .then((res)=>
+      {
+        this.Jsonfile = res.data;
+        console.log(res);
+        })
 
       .catch((error) => {
           // eslint-disable-next-line
           console.error(error);
         });
-        console.log(res)
+       
     },
 
     addTask(payload) {
@@ -560,6 +587,8 @@ export default {
 
   async created() {
     this.getTasks();
+    this.jsonParams();
+    console.log(this.Jsonfile)
   },
 };
 </script>
